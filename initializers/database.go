@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -13,8 +14,7 @@ var DB *gorm.DB
 
 func ConnectDB(config *Config) {
 	var err error
-	dsn := "postgresql://postgres:HhO5Pki8MpAIo1y53IYT@containers-us-west-31.railway.app:6099/railway"
-
+	dsn := viper.GetString("DATABASE_URL")
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to the Database! \n", err.Error())
