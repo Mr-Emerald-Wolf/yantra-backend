@@ -13,7 +13,7 @@ var DB *gorm.DB
 
 func ConnectDB(config *Config) {
 	var err error
-	dsn := config.DATABASE_URL
+	dsn := "postgresql://postgres:HhO5Pki8MpAIo1y53IYT@containers-us-west-31.railway.app:6099/railway"
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
