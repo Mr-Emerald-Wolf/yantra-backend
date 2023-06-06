@@ -12,8 +12,8 @@ import (
 )
 
 func init() {
-	initializers.LoadEnvVariables()
-	initializers.ConnectDB()
+	config, _ := initializers.LoadConfig(".")
+	initializers.ConnectDB(&config)
 }
 
 func main() {
@@ -31,6 +31,12 @@ func main() {
 	app.Get("/ping", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
 			"message": "pong",
+		})
+	})
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"message": "OK",
 		})
 	})
 

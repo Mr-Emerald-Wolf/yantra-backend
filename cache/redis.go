@@ -3,9 +3,9 @@ package cache
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
+	"github.com/mr-emerald-wolf/yantra-backend/initializers"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -13,13 +13,14 @@ var rdb *redis.Client = nil
 var ctx = context.Background()
 
 func GetRedis() (*redis.Client, context.Context) {
+	config, _ := initializers.LoadConfig("../")
 	if rdb != nil {
 		return rdb, ctx
 	}
 	rdb = redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS_URL"),
-		Password: os.Getenv("REDIS_PASS"), // password set
-		DB:       0,                       // use default DB
+		Addr:     config.REDIS_URL,
+		Password: config.REDIS_PASS, // password set
+		DB:       0,                 // use default DB
 	})
 	_, err := rdb.Ping(ctx).Result()
 	if err != nil {

@@ -6,8 +6,8 @@ import (
 )
 
 func init() {
-	initializers.LoadEnvVariables()
-	initializers.ConnectDB()
+	config, _ := initializers.LoadConfig(".")
+	initializers.ConnectDB(&config)
 }
 
 func main() {
