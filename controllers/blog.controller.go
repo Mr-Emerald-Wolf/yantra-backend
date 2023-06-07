@@ -85,19 +85,19 @@ func UpdateBlog(ctx *fiber.Ctx) error {
 	}
 
 	updates := make(map[string]interface{})
-	if *payload.Title != "" {
+	if payload.Title != "" {
 		updates["title"] = payload.Title
 	}
-	if *payload.SubTitle != "" {
+	if payload.SubTitle != "" {
 		updates["subtitle"] = payload.SubTitle
 	}
-	if *payload.Description != "" {
+	if payload.Description != "" {
 		updates["description"] = payload.Description
 	}
-	if *payload.Author != "" {
+	if payload.Author != "" {
 		updates["author"] = payload.Author
 	}
-	if *payload.Date != "" {
+	if payload.Date != "" {
 		updates["date"] = payload.Date
 	}
 

@@ -7,6 +7,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.46.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.3.0
+	github.com/lib/pq v1.10.9
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/spf13/viper v1.16.0
 	golang.org/x/crypto v0.9.0

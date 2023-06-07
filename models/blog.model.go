@@ -4,25 +4,25 @@ import "github.com/google/uuid"
 
 type Blog struct {
 	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"id,omitempty"`
-	Title       *string   `gorm:"varchar(255);not null" json:"title"`
-	SubTitle    *string   `gorm:"varchar(255);not null" json:"subTitle"`
-	Description *string   `gorm:"varchar(255);not null" json:"description"`
-	Author      *string   `gorm:"varchar(255);not null" json:"author"`
-	Date        *string   `json:"date"`
+	Title       string    `gorm:"varchar(255);not null" json:"title"`
+	SubTitle    string    `gorm:"varchar(255);not null" json:"subTitle"`
+	Description string    `gorm:"varchar(255);not null" json:"description"`
+	Author      string    `gorm:"varchar(255);not null" json:"author"`
+	Date        string    `json:"date"`
 }
 
 type CreateBlogSchema struct {
-	Title       *string `json:"title" validate:"required"`
-	SubTitle    *string `json:"subTitle" validate:"required"`
-	Description *string `json:"description" validate:"required"`
-	Author      *string `json:"author" validate:"required"`
-	Date        *string `json:"date" validate:"required"`
+	Title       string `json:"title" validate:"required"`
+	SubTitle    string `json:"subTitle" validate:"required"`
+	Description string `json:"description" validate:"required"`
+	Author      string `json:"author" validate:"required"`
+	Date        string `json:"date" validate:"required"`
 }
 
 type UpdateBlogSchema struct {
-	Title       *string `json:"title"`
-	SubTitle    *string `json:"subTitle"`
-	Description *string `json:"description"`
-	Author      *string `json:"author"`
-	Date        *string `json:"date"`
+	Title       string `json:"title"`
+	SubTitle    string `json:"subTitle"`
+	Description string `json:"description"`
+	Author      string `json:"author"`
+	Date        string `json:"date"`
 }
