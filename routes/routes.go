@@ -7,4 +7,5 @@ func SetupRoutes(app *fiber.App) {
 	NGORoutes(app)
 	VolunteerRoutes(app)
 	EventRoutes(app)
+	BlogRoutes(app)
 }
