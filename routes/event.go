@@ -11,6 +11,6 @@ func EventRoutes(app *fiber.App) {
 	app.Get("event/find/:eventId", controllers.GetEvent)
 	eventGroup := app.Group("/event", middleware.VerifyNGO)
 	eventGroup.Post("/create", controllers.CreateEvent)
-	eventGroup.Put("/update", controllers.UpdateBlog)
-	eventGroup.Delete("/delete", controllers.DeleteUser)
+	eventGroup.Put("/update/:eventId", controllers.UpdateEvent)
+	eventGroup.Delete("/delete/:eventId", controllers.DeleteEvent)
 }

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/mr-emerald-wolf/yantra-backend/initializers"
 	"github.com/mr-emerald-wolf/yantra-backend/models"
 	"github.com/mr-emerald-wolf/yantra-backend/utils"
+	"github.com/spf13/viper"
 
 	"gorm.io/gorm"
 )
@@ -179,7 +179,7 @@ func LoginNGO(c *fiber.Ctx) error {
 		Email: findNgo.Email,
 		Role:  findNgo.Role,
 	}
-	token, err := utils.GenerateToken(duration, sub, os.Getenv("REFRESH_JWT_SECRET"))
+	token, err := utils.GenerateToken(duration, sub, viper.GetString("REFRESH_JWT_SECRET"))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "false", "err": err})
 	}

@@ -11,6 +11,6 @@ func BlogRoutes(app *fiber.App) {
 	app.Get("blog/find/:blogId", controllers.GetBlog)
 	blogGroup := app.Group("/blog", middleware.VerifyToken)
 	blogGroup.Post("/create", controllers.CreateBlog)
-	blogGroup.Put("/update", controllers.UpdateBlog)
-	blogGroup.Delete("/delete", controllers.DeleteBlog)
+	blogGroup.Put("/update/:blogId", controllers.UpdateBlog)
+	blogGroup.Delete("/delete/:blogId", controllers.DeleteBlog)
 }

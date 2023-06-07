@@ -12,7 +12,7 @@ func UserRoutes(app *fiber.App) {
 	app.Get("user/find/:userId", controllers.FindUserById)
 	app.Post("user/login", controllers.LoginUser)
 	app.Post("user/refresh", controllers.RefreshToken)
-	userGroup := app.Group("/user", middleware.VerifyToken)
+	userGroup := app.Group("/user", middleware.VerifyUser)
 	userGroup.Get("/me", controllers.GetMe)
 	userGroup.Put("/update", controllers.UpdateUser)
 	userGroup.Delete("/delete", controllers.DeleteUser)

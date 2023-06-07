@@ -13,7 +13,7 @@ import (
 )
 
 func CreateEvent(ctx *fiber.Ctx) error {
-	var payload *models.Event
+	var payload models.CreateEventSchema
 
 	if err := ctx.BodyParser(&payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": err.Error()})
@@ -71,42 +71,43 @@ func GetEvent(ctx *fiber.Ctx) error {
 }
 
 func UpdateEvent(ctx *fiber.Ctx) error {
+
 	var payload models.UpdateEventSchema
 	eventId := ctx.Params("eventId")
 
-	if err := ctx.BodyParser(&payload); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": err.Error()})
+	if errr := ctx.BodyParser(&payload); errr != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": errr.Error()})
 	}
 
 	var event models.Event
 	result := initializers.DB.First(&event, "id = ?", eventId)
 	if err := result.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "No event with that email exists"})
+			return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "No event with that id exists"})
 		}
 		return ctx.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": err.Error()})
 	}
 
 	updates := make(map[string]interface{})
-	if *payload.Title != "" {
+	if payload.Title != "" {
 		updates["title"] = payload.Title
 	}
-	if *payload.SubTitle != "" {
+	if payload.SubTitle != "" {
 		updates["subtitle"] = payload.SubTitle
 	}
-	if *payload.Description != "" {
+	if payload.Description != "" {
 		updates["description"] = payload.Description
 	}
-	if *payload.Location != "" {
+	if payload.Location != "" {
 		updates["location"] = payload.Location
 	}
-	if *payload.Date != "" {
+	if payload.Date != "" {
 		updates["date"] = payload.Date
 	}
-	if *payload.StartTime != "" {
+	if payload.StartTime != "" {
 		updates["starttime"] = payload.StartTime
 	}
-	if *payload.EndTime != "" {
+	if payload.EndTime != "" {
 		updates["endtime"] = payload.EndTime
 	}
 
@@ -115,7 +116,6 @@ func UpdateEvent(ctx *fiber.Ctx) error {
 	initializers.DB.Model(&event).Updates(updates)
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": fiber.Map{"event": event}})
-
 }
 
 func DeleteEvent(ctx *fiber.Ctx) error {

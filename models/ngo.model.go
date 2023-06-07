@@ -3,20 +3,22 @@ package models
 import (
 	"time"
 
+	pq "github.com/lib/pq"
+
 	"github.com/google/uuid"
 )
 
 type Ngo struct {
-	ID        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"id,omitempty"`
-	Name      string    `gorm:"varchar(255);not null" json:"name,omitempty"`
-	Email     string    `gorm:"unique;not null" json:"email,omitempty"`
-	Password  string    `gorm:"not null" json:"-"`
-	Role      string    `gorm:"not null" json:"role,omitempty"`
-	Phone     string    `gorm:"varchar(100)" json:"phone,omitempty"`
-	Address   string    `gorm:"varchar(100)" json:"address,omitempty"`
-	Category  []string  `gorm:"type:varchar[]" json:"category,omitempty"`
-	CreatedAt time.Time `gorm:"not null" json:"createdAt,omitempty"`
-	UpdatedAt time.Time `gorm:"not null" json:"updatedAt,omitempty"`
+	ID        uuid.UUID      `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"id,omitempty"`
+	Name      string         `gorm:"varchar(255);not null" json:"name,omitempty"`
+	Email     string         `gorm:"unique;not null" json:"email,omitempty"`
+	Password  string         `gorm:"not null" json:"-"`
+	Role      string         `gorm:"not null" json:"role,omitempty"`
+	Phone     string         `gorm:"varchar(100)" json:"phone,omitempty"`
+	Address   string         `gorm:"varchar(100)" json:"address,omitempty"`
+	Category  pq.StringArray `gorm:"type:varchar(64)[]" json:"category"`
+	CreatedAt time.Time      `gorm:"not null" json:"createdAt,omitempty"`
+	UpdatedAt time.Time      `gorm:"not null" json:"updatedAt,omitempty"`
 }
 
 type CreateNgoSchema struct {
