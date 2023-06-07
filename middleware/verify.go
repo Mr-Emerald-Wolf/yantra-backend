@@ -129,7 +129,7 @@ func VerifyVol(ctx *fiber.Ctx) error {
 	}
 
 	if res.Role != "VOLUNTEER" {
-		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "User is not an NGO"})
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "User is not an Volunteer"})
 	}
 	// Get the user
 	findVol := models.Volunteer{}

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/mr-emerald-wolf/yantra-backend/initializers"
 	"github.com/mr-emerald-wolf/yantra-backend/models"
 	"github.com/mr-emerald-wolf/yantra-backend/utils"
+	"gorm.io/gorm"
 )
 
 func CreateRequest(c *fiber.Ctx) error {
@@ -34,6 +36,7 @@ func CreateRequest(c *fiber.Ctx) error {
 		Title:       payload.Title,
 		Description: payload.Description,
 		IsFulfilled: false,
+		Category:    payload.Category,
 		VolunteerID: payload.VolunteerID,
 		NGO:         payload.NGO,
 		CreatedAt:   now,
@@ -54,7 +57,65 @@ func GetFulfilledRequest(c *fiber.Ctx) error {
 	var requests []models.Request
 	userId := c.GetRespHeader("currentUser")
 
-	results := initializers.DB.Find(&requests, "userId = ? AND is_fulfilled = ?", userId, true)
+	results := initializers.DB.Find(&requests, "user_id = ? AND is_fulfilled = ?", userId, true)
+	if results.Error != nil {
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": results.Error.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "results": len(requests), "requests": requests})
+}
+
+func GetUnFulfilledRequest(c *fiber.Ctx) error {
+	var requests []models.Request
+	userId := c.GetRespHeader("currentUser")
+
+	results := initializers.DB.Find(&requests, "user_id = ? AND is_fulfilled = ?", userId, false)
+	if results.Error != nil {
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": results.Error.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "results": len(requests), "requests": requests})
+}
+
+func FulfillRequest(c *fiber.Ctx) error {
+	requestId := c.Params("requestId")
+
+	var request models.Request
+	result := initializers.DB.First(&request, "id = ?", requestId)
+	if err := result.Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "No request with that id exists"})
+		}
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": err.Error()})
+	}
+
+	updates := make(map[string]interface{})
+	updates["is_fulfilled"] = true
+
+	fmt.Println(updates)
+
+	initializers.DB.Model(&request).Updates(updates)
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": fiber.Map{"request": request}})
+}
+
+func GetNgoRequests(c *fiber.Ctx) error {
+	var requests []models.Request
+	ngoId := c.GetRespHeader("currentNgo")
+
+	results := initializers.DB.Find(&requests, "ngo = ?", ngoId)
+	if results.Error != nil {
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": results.Error.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "results": len(requests), "requests": requests})
+}
+
+func GetVolRequests(c *fiber.Ctx) error {
+	var requests []models.Request
+	volId := c.GetRespHeader("currentVol")
+
+	results := initializers.DB.Find(&requests, "volunteer_id = ?", volId)
 	if results.Error != nil {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": results.Error.Error()})
 	}
