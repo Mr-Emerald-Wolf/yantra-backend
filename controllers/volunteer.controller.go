@@ -38,6 +38,7 @@ func CreateVolunteer(c *fiber.Ctx) error {
 		Gender:    payload.Gender,
 		Address:   payload.Address,
 		Password:  hash,
+		Category:  payload.Category,
 		NGO:       payload.NGO,
 		CreatedAt: now,
 		UpdatedAt: now,
@@ -180,8 +181,8 @@ func LoginVolunteer(c *fiber.Ctx) error {
 	// Create a new refreshToken
 	duration, _ := time.ParseDuration("1h")
 	sub := utils.TokenPayload{
-		Id: findVol.ID,
-		Role:  findVol.Role,
+		Id:   findVol.ID,
+		Role: findVol.Role,
 	}
 
 	refreshSecret := viper.GetString("REFRESH_JWT_SECRET")
