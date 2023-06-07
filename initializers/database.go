@@ -1,6 +1,7 @@
 package initializers
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -15,7 +16,9 @@ var DB *gorm.DB
 
 func ConnectDB(config *Config) {
 	var err error
-	dsn := viper.GetString("DATABASE_URL")
+	// dsn := viper.GetString("DATABASE_URL")
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", viper.GetString("POSTGRES_HOST"), viper.GetString("POSTGRES_USER"), viper.GetString("POSTGRES_PASSWORD"), viper.GetString("POSTGRES_DB"), viper.GetString("POSTGRES_PORT"))
+
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to the Database! \n", err.Error())
