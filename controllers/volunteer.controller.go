@@ -66,7 +66,7 @@ func GetVolunteers(c *fiber.Ctx) error {
 }
 
 func UpdateVolunteer(c *fiber.Ctx) error {
-	email := c.GetRespHeader("currentVol")
+	id := c.GetRespHeader("currentVol")
 
 	var payload *models.UpdateVolunteerSchema
 
@@ -75,7 +75,7 @@ func UpdateVolunteer(c *fiber.Ctx) error {
 	}
 
 	var vol models.Volunteer
-	result := initializers.DB.First(&vol, "email = ?", email)
+	result := initializers.DB.First(&vol, "id = ?", id)
 	if err := result.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "No volunteer with that email exists"})
@@ -117,17 +117,17 @@ func FindVolByID(c *fiber.Ctx) error {
 }
 
 func DeleteVolunteer(c *fiber.Ctx) error {
-	email := c.GetRespHeader("currentVol")
+	id := c.GetRespHeader("currentVol")
 	// Get the volunteer
 	vol := models.Volunteer{}
-	result := initializers.DB.First(&vol, "email = ?", email)
+	result := initializers.DB.First(&vol, "id = ?", id)
 
 	if result.Error != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "User Not Found", "err": result.Error.Error()})
 		// log.Fatal(result.Error)
 	}
 
-	result = initializers.DB.Delete(&models.Volunteer{}, "email = ?", email)
+	result = initializers.DB.Delete(&models.Volunteer{}, "id = ?", id)
 
 	if result.Error != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "User Not Deleted", "err": result.Error.Error()})
@@ -138,10 +138,10 @@ func DeleteVolunteer(c *fiber.Ctx) error {
 }
 
 func GetMeVolunteer(c *fiber.Ctx) error {
-	email := c.GetRespHeader("currentVol")
+	id := c.GetRespHeader("currentVol")
 	vol := models.Volunteer{}
 
-	result := initializers.DB.First(&vol, "email = ?", fmt.Sprint(email))
+	result := initializers.DB.First(&vol, "id = ?", fmt.Sprint(id))
 	if result.Error != nil {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"status": "fail", "message": "the user belonging to this token no logger exists"})
 	}
@@ -180,7 +180,7 @@ func LoginVolunteer(c *fiber.Ctx) error {
 	// Create a new refreshToken
 	duration, _ := time.ParseDuration("1h")
 	sub := utils.TokenPayload{
-		Email: findVol.Email,
+		Id: findVol.ID,
 		Role:  findVol.Role,
 	}
 

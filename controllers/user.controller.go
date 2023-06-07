@@ -65,7 +65,7 @@ func GetUsers(c *fiber.Ctx) error {
 }
 
 func UpdateUser(c *fiber.Ctx) error {
-	email := c.GetRespHeader("currentUser")
+	id := c.GetRespHeader("currentUser")
 
 	var payload *models.UpdateUserSchema
 
@@ -74,7 +74,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 
 	var user models.User
-	result := initializers.DB.First(&user, "email = ?", email)
+	result := initializers.DB.First(&user, "id = ?", id)
 	if err := result.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "No user with that email exists"})
@@ -113,17 +113,17 @@ func FindUserById(c *fiber.Ctx) error {
 }
 
 func DeleteUser(c *fiber.Ctx) error {
-	email := c.GetRespHeader("currentUser")
+	id := c.GetRespHeader("currentUser")
 	// Get the user
 	user := models.User{}
-	result := initializers.DB.First(&user, "email = ?", email)
+	result := initializers.DB.First(&user, "id = ?", id)
 
 	if result.Error != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "User Not Found", "err": result.Error.Error()})
 		// log.Fatal(result.Error)
 	}
 
-	result = initializers.DB.Delete(&models.User{}, "email = ?", email)
+	result = initializers.DB.Delete(&models.User{}, "id = ?", id)
 
 	if result.Error != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "User Not Deleted", "err": result.Error.Error()})
@@ -134,10 +134,10 @@ func DeleteUser(c *fiber.Ctx) error {
 }
 
 func GetMe(c *fiber.Ctx) error {
-	email := c.GetRespHeader("currentUser")
+	id := c.GetRespHeader("currentUser")
 	user := models.User{}
 
-	result := initializers.DB.First(&user, "email = ?", fmt.Sprint(email))
+	result := initializers.DB.First(&user, "id = ?", fmt.Sprint(id))
 	if result.Error != nil {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"status": "fail", "message": "the user belonging to this token no logger exists"})
 	}
@@ -176,7 +176,7 @@ func LoginUser(c *fiber.Ctx) error {
 	// Create a new refreshToken
 	duration, _ := time.ParseDuration("1h")
 	sub := utils.TokenPayload{
-		Email: findUser.Email,
+		Id: findUser.ID,
 		Role:  findUser.Role,
 	}
 
@@ -192,7 +192,6 @@ func LoginUser(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "true", "token": token})
-
 }
 
 func RefreshToken(ctx *fiber.Ctx) error {

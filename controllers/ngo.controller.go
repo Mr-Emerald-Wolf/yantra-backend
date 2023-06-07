@@ -65,7 +65,7 @@ func AllNGOs(c *fiber.Ctx) error {
 }
 
 func UpdateNGO(c *fiber.Ctx) error {
-	email := c.GetRespHeader("currentNGO")
+	id := c.GetRespHeader("currentNGO")
 
 	var payload models.UpdateNgoSchema
 
@@ -74,7 +74,7 @@ func UpdateNGO(c *fiber.Ctx) error {
 	}
 
 	var ngo models.Ngo
-	result := initializers.DB.First(&ngo, "email = ?", email)
+	result := initializers.DB.First(&ngo, "id = ?", id)
 	if err := result.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "No NGO with that email exists"})
@@ -113,17 +113,17 @@ func FindNGObyId(c *fiber.Ctx) error {
 }
 
 func DeleteNGO(c *fiber.Ctx) error {
-	email := c.GetRespHeader("currentNGO")
+	id := c.GetRespHeader("currentNGO")
 	// Get the ngo
 	ngo := models.Ngo{}
-	result := initializers.DB.First(&ngo, "email = ?", email)
+	result := initializers.DB.First(&ngo, "id = ?", id)
 
 	if result.Error != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "NGO Not Found", "err": result.Error.Error()})
 		// log.Fatal(result.Error)
 	}
 
-	result = initializers.DB.Delete(&models.Ngo{}, "email = ?", email)
+	result = initializers.DB.Delete(&models.Ngo{}, "id = ?", id)
 
 	if result.Error != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "NGO Not Deleted", "err": result.Error.Error()})
@@ -134,10 +134,10 @@ func DeleteNGO(c *fiber.Ctx) error {
 }
 
 func GetNGO(c *fiber.Ctx) error {
-	email := c.GetRespHeader("currentNGO")
+	id := c.GetRespHeader("currentNGO")
 	ngo := models.Ngo{}
 
-	result := initializers.DB.First(&ngo, "email = ?", fmt.Sprint(email))
+	result := initializers.DB.First(&ngo, "id = ?", fmt.Sprint(id))
 	if result.Error != nil {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"status": "fail", "message": "the NGO belonging to this token no logger exists"})
 	}
@@ -176,8 +176,8 @@ func LoginNGO(c *fiber.Ctx) error {
 	// Create a new refreshToken
 	duration, _ := time.ParseDuration("1h")
 	sub := utils.TokenPayload{
-		Email: findNgo.Email,
-		Role:  findNgo.Role,
+		Id:   findNgo.ID,
+		Role: findNgo.Role,
 	}
 	token, err := utils.GenerateToken(duration, sub, viper.GetString("REFRESH_JWT_SECRET"))
 	if err != nil {
