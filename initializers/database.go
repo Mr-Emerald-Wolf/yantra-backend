@@ -35,6 +35,7 @@ func ConnectDB(config *Config) {
 	DB.AutoMigrate(&models.Volunteer{})
 	DB.AutoMigrate(&models.Event{})
 	DB.AutoMigrate(&models.Blog{})
+	DB.AutoMigrate(&models.Request{})
 
 	log.Println("🚀 Connected Successfully to the Database")
 }

@@ -55,18 +55,18 @@ func VerifyUser(ctx *fiber.Ctx) error {
 	}
 
 	if res.Role != "USER" {
-		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "User is not an admin"})
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "Not a user"})
 	}
 	// Get the user
 	findUser := models.User{}
-	result := initializers.DB.First(&findUser, "email = ?", res.Email)
+	result := initializers.DB.First(&findUser, "id = ?", res.Id)
 
 	if result.Error != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "err": result.Error.Error(), "message": "Could not find user belonging to this token"})
 		// log.Fatal(result.Error)
 	}
 
-	ctx.Set("currentUser", findUser.Email)
+	ctx.Set("currentUser", findUser.ID.String())
 	return ctx.Next()
 }
 
@@ -96,14 +96,14 @@ func VerifyNGO(ctx *fiber.Ctx) error {
 	}
 	// Get the user
 	findNGO := models.Ngo{}
-	result := initializers.DB.First(&findNGO, "email = ?", res.Email)
+	result := initializers.DB.First(&findNGO, "id = ?", res.Id)
 
 	if result.Error != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "err": result.Error.Error(), "message": "Could not find NGO belonging to this token"})
 		// log.Fatal(result.Error)
 	}
 
-	ctx.Set("currentNGO", findNGO.Email)
+	ctx.Set("currentNGO", findNGO.ID.String())
 	return ctx.Next()
 }
 
@@ -133,13 +133,13 @@ func VerifyVol(ctx *fiber.Ctx) error {
 	}
 	// Get the user
 	findVol := models.Volunteer{}
-	result := initializers.DB.First(&findVol, "email = ?", res.Email)
+	result := initializers.DB.First(&findVol, "id = ?", res.Id)
 
 	if result.Error != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "err": result.Error.Error(), "message": "Could not find volunteer belonging to this token"})
 		// log.Fatal(result.Error)
 	}
 
-	ctx.Set("currentVol", findVol.Email)
+	ctx.Set("currentVol", findVol.ID.String())
 	return ctx.Next()
 }

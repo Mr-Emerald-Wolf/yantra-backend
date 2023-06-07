@@ -2,7 +2,7 @@ package cache
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -25,7 +25,8 @@ func GetRedis() (*redis.Client, context.Context) {
 	})
 	_, err := rdb.Ping(ctx).Result()
 	if err != nil {
-		log.Fatalf("Redis Init Failed")
+		fmt.Println("Redis Init Failed")
+		// log.Fatalf("Redis Init Failed")
 	}
 	return rdb, ctx
 }

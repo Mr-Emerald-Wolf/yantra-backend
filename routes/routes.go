@@ -8,4 +8,5 @@ func SetupRoutes(app *fiber.App) {
 	VolunteerRoutes(app)
 	EventRoutes(app)
 	BlogRoutes(app)
+	RequestRoutes(app)
 }

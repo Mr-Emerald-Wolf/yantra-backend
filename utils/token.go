@@ -5,11 +5,12 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/google/uuid"
 )
 
 type TokenPayload struct {
-	Email string
-	Role  string
+	Id   uuid.UUID
+	Role string
 }
 
 type TokenRequest struct {
@@ -22,7 +23,7 @@ func GenerateToken(ttl time.Duration, payload TokenPayload, secretJWTKey string)
 	now := time.Now().UTC()
 	claims := token.Claims.(jwt.MapClaims)
 
-	claims["sub"] = payload.Email
+	claims["sub"] = payload.Id
 	claims["role"] = payload.Role
 	claims["exp"] = now.Add(ttl).Unix()
 	claims["iat"] = now.Unix()
@@ -53,9 +54,13 @@ func ValidateToken(token string, signedJWTKey string) (TokenPayload, error) {
 	if !ok || !tok.Valid {
 		return TokenPayload{}, fmt.Errorf("invalid token claim")
 	}
+	uuid, err := uuid.Parse(claims["sub"].(string))
+	if err != nil {
+		return TokenPayload{}, fmt.Errorf("could not parse uuid: %w", err)
+	}
 	res := TokenPayload{
-		Email: claims["sub"].(string),
-		Role:  claims["role"].(string),
+		Id:   uuid,
+		Role: claims["role"].(string),
 	}
 	return res, nil
 }
