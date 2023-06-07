@@ -1,13 +1,13 @@
 package middleware
 
 import (
-	"os"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/mr-emerald-wolf/yantra-backend/initializers"
 	"github.com/mr-emerald-wolf/yantra-backend/models"
 	"github.com/mr-emerald-wolf/yantra-backend/utils"
+	"github.com/spf13/viper"
 )
 
 func VerifyToken(ctx *fiber.Ctx) error {
@@ -25,7 +25,7 @@ func VerifyToken(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "You are not logged in"})
 	}
 
-	res, err := utils.ValidateToken(token, os.Getenv("JWT_SECRET"))
+	res, err := utils.ValidateToken(token, viper.GetString("JWT_SECRET"))
 
 	if err != nil {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": err.Error()})
@@ -59,7 +59,7 @@ func VerifyAdmin(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "You are not logged in"})
 	}
 
-	res, err := utils.ValidateToken(token, os.Getenv("JWT_SECRET"))
+	res, err := utils.ValidateToken(token, viper.GetString("JWT_SECRET"))
 
 	if err != nil {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": err.Error()})
@@ -96,7 +96,7 @@ func VerifyNGO(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "You are not logged in"})
 	}
 
-	res, err := utils.ValidateToken(token, os.Getenv("JWT_SECRET"))
+	res, err := utils.ValidateToken(token, viper.GetString("JWT_SECRET"))
 
 	if err != nil {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": err.Error()})
@@ -133,7 +133,7 @@ func VerifyVol(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "You are not logged in"})
 	}
 
-	res, err := utils.ValidateToken(token, os.Getenv("JWT_SECRET"))
+	res, err := utils.ValidateToken(token, viper.GetString("JWT_SECRET"))
 
 	if err != nil {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": err.Error()})
