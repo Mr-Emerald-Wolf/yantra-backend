@@ -5,22 +5,23 @@ import (
 	"log"
 	"time"
 
-	"github.com/mr-emerald-wolf/yantra-backend/initializers"
 	"github.com/redis/go-redis/v9"
+	"github.com/spf13/viper"
 )
 
 var rdb *redis.Client = nil
 var ctx = context.Background()
 
 func GetRedis() (*redis.Client, context.Context) {
-	config, _ := initializers.LoadConfig("../")
+	redisurl := viper.GetString("REDIS_URL")
+	redispass := viper.GetString("REDIS_PASS")
 	if rdb != nil {
 		return rdb, ctx
 	}
 	rdb = redis.NewClient(&redis.Options{
-		Addr:     config.REDIS_URL,
-		Password: config.REDIS_PASS, // password set
-		DB:       0,                 // use default DB
+		Addr:     redisurl,
+		Password: redispass, // password set
+		DB:       0,         // use default DB
 	})
 	_, err := rdb.Ping(ctx).Result()
 	if err != nil {

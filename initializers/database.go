@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/mr-emerald-wolf/yantra-backend/models"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -24,9 +25,9 @@ func ConnectDB(config *Config) {
 	DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
 	DB.Logger = logger.Default.LogMode(logger.Info)
 
-	// log.Println("Running Migrations")
-	// DB.AutoMigrate(&models.User{})
-	// DB.AutoMigrate(&models.Product{})
+	log.Println("Running Migrations")
+	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.Ngo{})
 
 	log.Println("🚀 Connected Successfully to the Database")
 }

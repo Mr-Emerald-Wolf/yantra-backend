@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/mr-emerald-wolf/yantra-backend/initializers"
 	"github.com/mr-emerald-wolf/yantra-backend/models"
 	"github.com/mr-emerald-wolf/yantra-backend/utils"
+	"github.com/spf13/viper"
 
 	"gorm.io/gorm"
 )
@@ -177,7 +177,9 @@ func LoginUser(c *fiber.Ctx) error {
 		Email: findUser.Email,
 		Role:  findUser.Role,
 	}
-	token, err := utils.GenerateToken(duration, sub, os.Getenv("REFRESH_JWT_SECRET"))
+
+	refreshSecret := viper.GetString("REFRESH_JWT_SECRET")
+	token, err := utils.GenerateToken(duration, sub, refreshSecret)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "false", "err": err})
 	}
@@ -210,14 +212,16 @@ func RefreshToken(ctx *fiber.Ctx) error {
 	}
 
 	// Validate Refresh Token
-	sub, err := utils.ValidateToken(payload.RefreshToken, os.Getenv("REFRESH_JWT_SECRET"))
+	refreshSecret := viper.GetString("REFRESH_JWT_SECRET")
+	sub, err := utils.ValidateToken(payload.RefreshToken, refreshSecret)
 	if err != nil {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "err": err.Error(), "token": payload.RefreshToken})
 	}
 
 	// Create new accessToken
 	duration, _ := time.ParseDuration("1h")
-	accessToken, err := utils.GenerateToken(duration, sub, os.Getenv("JWT_SECRET"))
+	secret := viper.GetString("JWT_SECRET")
+	accessToken, err := utils.GenerateToken(duration, sub, secret)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "false", "err": err})
 	}
