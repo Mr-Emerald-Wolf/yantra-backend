@@ -14,7 +14,7 @@ type Request struct {
 	Category    string    `gorm:"varchar(255);not null" json:"category"`
 	Description string    `gorm:"varchar(255);not null" json:"description"`
 	CreatedAt   time.Time `json:"created_at"`
-	IsFulfilled bool      `json:"is_fulfilled"`
+	IsFulfilled bool      `gorm:"not null" json:"isfulfilled"`
 	VolunteerID uuid.UUID `gorm:"not null" json:"volId"`
 	NGO         uuid.UUID `json:"ngo"`
 }
@@ -23,16 +23,14 @@ type CreateRequestSchema struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Category    string    `json:"category"`
-	CreatedAt   time.Time `json:"created_at"`
-	IsFulfilled bool      `json:"is_fulfilled"`
 	VolunteerID uuid.UUID `json:"volId"`
-	NGO         uuid.UUID       `json:"ngo"`
+	NGO         uuid.UUID `json:"ngo"`
 }
 
 type UpdateRequestSchema struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Category    string `json:"category"`
-	IsFulfilled bool   `json:"is_fulfilled"`
-	NGO         uuid.UUID    `json:"ngo"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Category    string    `json:"category"`
+	IsFulfilled bool      `json:"isfulfilled"`
+	NGO         uuid.UUID `json:"ngo"`
 }

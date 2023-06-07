@@ -55,7 +55,7 @@ func VerifyUser(ctx *fiber.Ctx) error {
 	}
 
 	if res.Role != "USER" {
-		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "User is not an admin"})
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "Not a user"})
 	}
 	// Get the user
 	findUser := models.User{}
