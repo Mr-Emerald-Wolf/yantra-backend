@@ -12,6 +12,12 @@ func RequestRoutes(app *fiber.App) {
 	requestGroup.Post("/create", controllers.CreateRequest)
 	requestGroup.Get("/find/:requestId", controllers.FindNGObyId)
 	requestGroup.Get("/fulfilled", controllers.GetFulfilledRequest)
-	// requestGroup.Put("/update", controllers.UpdateNGO)
+	requestGroup.Get("/unfulfilled", controllers.GetUnFulfilledRequest)
+	requestGroup.Put("/fulfill/:requestId", controllers.FulfillRequest)
+	ngoGroup := app.Group("/ngo", middleware.VerifyNGO)
+	ngoGroup.Get("/request", controllers.GetNgoRequests)
+	volGroup := app.Group("/volunteer", middleware.VerifyVol)
+	volGroup.Get("/request", controllers.GetVolRequests)
+
 	// requestGroup.Delete("/delete", controllers.DeleteNGO)
 }
