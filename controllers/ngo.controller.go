@@ -35,6 +35,8 @@ func CreateNgo(c *fiber.Ctx) error {
 		Email:     payload.Email,
 		Phone:     payload.Phone,
 		Role:      payload.Role,
+		Address:   payload.Address,
+		Category:  payload.Category,
 		Password:  hash,
 		CreatedAt: now,
 		UpdatedAt: now,

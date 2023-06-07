@@ -20,11 +20,13 @@ type Ngo struct {
 }
 
 type CreateNgoSchema struct {
-	Name     string `json:"name" validate:"required"`
-	Email    string `json:"email" validate:"required"`
-	Password string `json:"password" validate:"required"`
-	Role     string `json:"role" validate:"required"`
-	Phone    string `json:"phone,omitempty"`
+	Name     string   `json:"name" validate:"required"`
+	Email    string   `json:"email" validate:"required"`
+	Password string   `json:"password" validate:"required"`
+	Role     string   `json:"role" validate:"required"`
+	Address  string   `json:"address,omitempty" validate:"required"`
+	Category []string `json:"category,omitempty" validate:"required"`
+	Phone    string   `json:"phone,omitempty"`
 }
 
 type UpdateNgoSchema struct {

@@ -35,6 +35,8 @@ func CreateUser(c *fiber.Ctx) error {
 		Email:     payload.Email,
 		Phone:     payload.Phone,
 		Role:      payload.Role,
+		Gender:    payload.Gender,
+		Address:   payload.Address,
 		Password:  hash,
 		CreatedAt: now,
 		UpdatedAt: now,

@@ -9,13 +9,14 @@ import (
 // Request represents a request made by an elderly user
 type Request struct {
 	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"id,omitempty"`
-	UserID      uuid.UUID `json:"userId"`
-	Title       string    `json:"title"`
-	Category    string    `json:"category"`
-	Description string    `json:"description"`
+	UserID      uuid.UUID `gorm:"not null" json:"userId"`
+	Title       string    `gorm:"varchar(255);not null" json:"title"`
+	Category    string    `gorm:"varchar(255);not null" json:"category"`
+	Description string    `gorm:"varchar(255);not null" json:"description"`
 	CreatedAt   time.Time `json:"created_at"`
 	IsFulfilled bool      `json:"is_fulfilled"`
-	NGO         Ngo       `json:"ngo"`
+	VolunteerID uuid.UUID `gorm:"not null" json:"volId"`
+	NGO         uuid.UUID `json:"ngo"`
 }
 type CreateRequestSchema struct {
 	UserID      uuid.UUID `json:"userId"`
@@ -24,7 +25,8 @@ type CreateRequestSchema struct {
 	Category    string    `json:"category"`
 	CreatedAt   time.Time `json:"created_at"`
 	IsFulfilled bool      `json:"is_fulfilled"`
-	NGO         Ngo       `json:"ngo"`
+	VolunteerID uuid.UUID `json:"volId"`
+	NGO         uuid.UUID       `json:"ngo"`
 }
 
 type UpdateRequestSchema struct {
@@ -32,5 +34,5 @@ type UpdateRequestSchema struct {
 	Description string `json:"description"`
 	Category    string `json:"category"`
 	IsFulfilled bool   `json:"is_fulfilled"`
-	NGO         Ngo    `json:"ngo"`
+	NGO         uuid.UUID    `json:"ngo"`
 }

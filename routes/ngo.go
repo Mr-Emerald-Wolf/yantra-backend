@@ -12,8 +12,8 @@ func NGORoutes(app *fiber.App) {
 	app.Get("ngo/find/:ngoId", controllers.FindNGObyId)
 	app.Post("ngo/login", controllers.LoginNGO)
 	app.Post("ngo/refresh", controllers.RefreshToken)
-	userGroup := app.Group("/ngo", middleware.VerifyNGO)
-	userGroup.Get("/me", controllers.GetMe)
-	userGroup.Put("/update", controllers.UpdateUser)
-	userGroup.Delete("/delete", controllers.DeleteUser)
+	ngoGroup := app.Group("/ngo", middleware.VerifyNGO)
+	ngoGroup.Get("/me", controllers.GetMe)
+	ngoGroup.Put("/update", controllers.UpdateUser)
+	ngoGroup.Delete("/delete", controllers.DeleteUser)
 }
