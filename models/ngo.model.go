@@ -14,7 +14,7 @@ type Ngo struct {
 	Role      string    `gorm:"not null" json:"role,omitempty"`
 	Phone     string    `gorm:"varchar(100)" json:"phone,omitempty"`
 	Address   string    `gorm:"varchar(100)" json:"address,omitempty"`
-	Category  []string  `gorm:"not null" json:"category,omitempty"`
+	Category  []string  `gorm:"type:varchar[]" json:"category,omitempty"`
 	CreatedAt time.Time `gorm:"not null" json:"createdAt,omitempty"`
 	UpdatedAt time.Time `gorm:"not null" json:"updatedAt,omitempty"`
 }
@@ -23,7 +23,6 @@ type CreateNgoSchema struct {
 	Name     string   `json:"name" validate:"required"`
 	Email    string   `json:"email" validate:"required"`
 	Password string   `json:"password" validate:"required"`
-	Role     string   `json:"role" validate:"required"`
 	Address  string   `json:"address,omitempty" validate:"required"`
 	Category []string `json:"category,omitempty" validate:"required"`
 	Phone    string   `json:"phone,omitempty"`
