@@ -34,7 +34,7 @@ func CreateUser(c *fiber.Ctx) error {
 		Name:      payload.Name,
 		Email:     payload.Email,
 		Phone:     payload.Phone,
-		Role:      payload.Role,
+		Role:      "USER",
 		Gender:    payload.Gender,
 		Address:   payload.Address,
 		Password:  hash,
@@ -176,8 +176,8 @@ func LoginUser(c *fiber.Ctx) error {
 	// Create a new refreshToken
 	duration, _ := time.ParseDuration("1h")
 	sub := utils.TokenPayload{
-		Id: findUser.ID,
-		Role:  findUser.Role,
+		Id:   findUser.ID,
+		Role: findUser.Role,
 	}
 
 	refreshSecret := viper.GetString("REFRESH_JWT_SECRET")
