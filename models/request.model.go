@@ -34,3 +34,7 @@ type UpdateRequestSchema struct {
 	IsFulfilled bool      `json:"isfulfilled"`
 	NGO         uuid.UUID `json:"ngo"`
 }
+
+type PreRequestSchema struct {
+	Category string `json:"category"`}
+
