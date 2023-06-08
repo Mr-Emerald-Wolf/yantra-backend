@@ -7,7 +7,8 @@ import (
 )
 
 func RequestRoutes(app *fiber.App) {
-	app.Get("request/findall", controllers.AllNGOs)
+	app.Get("request/findall", controllers.GetRequests)
+	app.Post("request/classify", controllers.CategorizeRequest)
 	requestGroup := app.Group("/request", middleware.VerifyUser)
 	requestGroup.Post("/create", controllers.CreateRequest)
 	requestGroup.Get("/find/:requestId", controllers.FindNGObyId)
@@ -19,5 +20,4 @@ func RequestRoutes(app *fiber.App) {
 	volGroup := app.Group("/volunteer", middleware.VerifyVol)
 	volGroup.Get("/request", controllers.GetVolRequests)
 
-	// requestGroup.Delete("/delete", controllers.DeleteNGO)
 }

@@ -53,6 +53,17 @@ func CreateRequest(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "request": newUser})
 }
 
+func GetRequests(c *fiber.Ctx) error {
+
+	var requests []models.Request
+	results := initializers.DB.Find(&requests)
+	if results.Error != nil {
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": results.Error})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "results": len(requests), "requests": requests})
+}
+
 func GetFulfilledRequest(c *fiber.Ctx) error {
 	var requests []models.Request
 	userId := c.GetRespHeader("currentUser")
@@ -121,4 +132,37 @@ func GetVolRequests(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "results": len(requests), "requests": requests})
+}
+
+func containsCategory(categories []string, target string) bool {
+	for _, category := range categories {
+		if category == target {
+			return true
+		}
+	}
+	return false
+}
+
+func CategorizeRequest(c *fiber.Ctx) error {
+	var payload models.PreRequestSchema
+
+	if err := c.BodyParser(&payload); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": err.Error()})
+	}
+	var volunteers []models.Volunteer
+
+	results := initializers.DB.Find(&volunteers)
+
+	if results.Error != nil {
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": results.Error.Error()})
+	}
+
+	var classify []models.Volunteer
+	for _, volunteer := range volunteers {
+		if containsCategory(volunteer.Category, payload.Category) {
+			classify = append(classify, volunteer)
+		}
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "classify": classify})
 }
