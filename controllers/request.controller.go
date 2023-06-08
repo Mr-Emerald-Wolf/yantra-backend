@@ -163,6 +163,8 @@ func CategorizeRequest(c *fiber.Ctx) error {
 			classify = append(classify, volunteer)
 		}
 	}
-
+	if len(classify) == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "err": "No matching Volunteers"})
+	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "classify": classify})
 }
