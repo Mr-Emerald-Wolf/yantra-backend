@@ -13,15 +13,14 @@ var rdb *redis.Client = nil
 var ctx = context.Background()
 
 func GetRedis() (*redis.Client, context.Context) {
-	redisurl := viper.GetString("REDIS_URL")
-	redispass := viper.GetString("REDIS_PASS")
+	redisurl := viper.GetString("REDIS_HOST")
+	redispass := viper.GetString("REDIS_PORT")
 	if rdb != nil {
 		return rdb, ctx
 	}
 	rdb = redis.NewClient(&redis.Options{
-		Addr:     redisurl,
-		Password: redispass, // password set
-		DB:       0,         // use default DB
+		Addr: fmt.Sprintf("%s:%s", redisurl, redispass),
+		DB:   0, // use default DB
 	})
 	_, err := rdb.Ping(ctx).Result()
 	if err != nil {

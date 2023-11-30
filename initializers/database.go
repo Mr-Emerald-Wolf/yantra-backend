@@ -1,11 +1,11 @@
 package initializers
 
 import (
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/mr-emerald-wolf/yantra-backend/models"
-	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -15,7 +15,14 @@ var DB *gorm.DB
 
 func ConnectDB(config *Config) {
 	var err error
-	dsn := viper.GetString("DATABASE_URL")
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
+		config.DBHost,
+		config.DBUserName,
+		config.DBUserPassword,
+		config.DBName,
+		config.DBPort,
+	)
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to the Database! \n", err.Error())
